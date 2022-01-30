@@ -1,17 +1,31 @@
 <template>
   <div class="container">
-    <CommentCard
-      v-for="comment in comments"
-      :key="comment.id"
-      :likes="comment.score"
-      :avatar="comment.user.image.png"
-      :username="comment.user.username"
-      :date="comment.createdAt"
-      :text="comment.content"
-      :reply="comment.replies.length ? true : false"
-      @addLikes="increaseLikes(comment.id)"
-      @removeLikes="decreaseLikes(comment.id)"
-    />
+    <template v-for="comment in comments" :key="comment.id">
+      <CommentCard
+        :likes="comment.score"
+        :avatar="comment.user.image.png"
+        :username="comment.user.username"
+        :date="comment.createdAt"
+        :text="comment.content"
+        @addLikes="increaseLikes(comment.id)"
+        @removeLikes="decreaseLikes(comment.id)"
+      />
+      <div class="replies">
+        <CommentCard
+          v-for="reply in comment.replies"
+          :key="reply.id"
+          :likes="reply.score"
+          :avatar="reply.user.image.png"
+          :username="reply.user.username"
+          :date="reply.createdAt"
+          :text="reply.content"
+          @addLikes="increaseLikes(reply.id)"
+          @removeLikes="decreaseLikes(reply.id)"
+          :reply="comment.replies ? true : false"
+          :class="{reply: 'reply'}"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -32,8 +46,8 @@ export default {
   },
   methods: {
     increaseLikes(id) {
-      this.comments.forEach((comment, idx) => {
-        if (id - 1 === idx) {
+      this.comments.forEach((comment) => {
+        if (id === comment.id) {
           comment.score += 1;
           return localStorage.setItem(
             'comments',
@@ -41,12 +55,38 @@ export default {
           );
         }
       });
+      this.comments.forEach((comment) => {
+        comment.replies.forEach((reply) => {
+          if (id === reply.id) {
+            reply.score += 1;
+            return localStorage.setItem(
+              'comments',
+              JSON.stringify(this.comments)
+            );
+          }
+        });
+      });
     },
     decreaseLikes(id) {
-      this.comments.forEach((comment, idx) => {
-        if (id - 1 === idx) {
-          return (comment.score -= 1);
+      this.comments.forEach((comment) => {
+        if (id === comment.id) {
+          comment.score -= 1;
+          return localStorage.setItem(
+            'comments',
+            JSON.stringify(this.comments)
+          );
         }
+      });
+      this.comments.forEach((comment) => {
+        comment.replies.forEach((reply) => {
+          if (id === reply.id) {
+            reply.score -= 1;
+            return localStorage.setItem(
+              'comments',
+              JSON.stringify(this.comments)
+            );
+          }
+        });
       });
     }
   }
@@ -103,5 +143,18 @@ body {
   max-width: 750px;
   margin: 0 auto;
   padding: 50px 20px;
+}
+.replies {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: $lightGrayishBlue;
+    left: 45px;
+    top: 0;
+  }
 }
 </style>

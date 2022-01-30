@@ -57,6 +57,7 @@ export default {
 
   .likes-count {
     font-weight: 500;
+    color: $modBlue;
   }
 }
 </style>

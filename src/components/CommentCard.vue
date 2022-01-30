@@ -53,6 +53,10 @@ export default {
   &:not(:last-child) {
     margin-bottom: 20px;
   }
+  &.reply {
+    max-width: 600px;
+    margin-left: auto;
+  }
 
   &__content {
     width: 100%;
