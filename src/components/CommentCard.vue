@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" :reply="reply">
     <div class="card__likes">
       <Likes :likes="likes" @addLikes="addLikes" @removeLikes="removeLikes" />
     </div>
@@ -18,7 +18,7 @@ export default {
   name: 'CommentCard',
   components: {Likes, CardHeader, CardComment},
   props: {
-    nested: Boolean,
+    reply: Boolean,
     likes: Number,
     avatar: String,
     username: String,

@@ -8,6 +8,7 @@
       :username="comment.user.username"
       :date="comment.createdAt"
       :text="comment.content"
+      :reply="comment.replies.length ? true : false"
       @addLikes="increaseLikes(comment.id)"
       @removeLikes="decreaseLikes(comment.id)"
     />
