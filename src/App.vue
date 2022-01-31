@@ -9,11 +9,13 @@
         :text="comment.content"
         @addLikes="increaseLikes(comment.id)"
         @removeLikes="decreaseLikes(comment.id)"
+        @deleteComment="deleteComment(comment.id)"
+        :currentUser="
+          currentUser.username === comment.user.username ? true : false
+        "
       />
       <div class="replies">
         <CommentCard
-          v-for="reply in comment.replies"
-          :key="reply.id"
           :likes="reply.score"
           :avatar="reply.user.image.png"
           :username="reply.user.username"
@@ -21,24 +23,39 @@
           :text="reply.content"
           @addLikes="increaseLikes(reply.id)"
           @removeLikes="decreaseLikes(reply.id)"
+          @deleteComment="deleteComment(reply.id)"
           :reply="comment.replies ? true : false"
           :class="{reply: 'reply'}"
+          v-for="reply in comment.replies"
+          :key="reply.id"
+          :currentUser="
+            currentUser.username === reply.user.username ? true : false
+          "
         />
       </div>
     </template>
+    <AddComment
+      :avatar="currentUser.image.png"
+      :username="currentUser.username"
+      v-model="commentText"
+      @submitForm="submitForm"
+    />
   </div>
 </template>
 
 <script>
 import CommentCard from './components/CommentCard.vue';
 import data from '../public/data.json';
+import AddComment from './components/AddComment.vue';
 
 export default {
   name: 'App',
-  components: {CommentCard},
+  components: {CommentCard, AddComment},
   data() {
     return {
-      comments: data.comments
+      comments: data.comments,
+      currentUser: data.currentUser,
+      commentText: ''
     };
   },
   created() {
@@ -88,6 +105,18 @@ export default {
           }
         });
       });
+    },
+    deleteComment(id) {
+      this.comments.filter((comment) => {
+        comment.id !== id;
+      });
+      this.comments.forEach((comment) => {
+        comment.replies = comment.replies.filter((reply) => reply.id !== id);
+        return localStorage.setItem('comments', JSON.stringify(this.comments));
+      });
+    },
+    submitForm() {
+      console.log(this.currentUser);
     }
   }
 };
@@ -126,7 +155,11 @@ ol,
 ul {
   list-style: none;
 }
-
+textarea::placeholder {
+  font-family: inherit;
+  font-size: 14px;
+  color: inherit;
+}
 img {
   max-width: 100%;
   height: auto;
@@ -146,6 +179,7 @@ body {
 }
 .replies {
   position: relative;
+  margin-bottom: 20px;
 
   &::after {
     content: '';

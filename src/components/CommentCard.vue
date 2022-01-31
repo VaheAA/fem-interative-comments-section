@@ -4,7 +4,13 @@
       <Likes :likes="likes" @addLikes="addLikes" @removeLikes="removeLikes" />
     </div>
     <div class="card__content">
-      <CardHeader :avatar="avatar" :username="username" :date="date" />
+      <CardHeader
+        :avatar="avatar"
+        :username="username"
+        :date="date"
+        :currentUser="currentUser"
+        @deleteComment="deleteComment"
+      />
       <CardComment :text="text" />
     </div>
   </div>
@@ -19,11 +25,13 @@ export default {
   components: {Likes, CardHeader, CardComment},
   props: {
     reply: Boolean,
+    replies: Array,
     likes: Number,
     avatar: String,
     username: String,
     date: String,
-    text: String
+    text: String,
+    currentUser: Boolean
   },
   data() {
     return {
@@ -36,6 +44,9 @@ export default {
     },
     removeLikes() {
       this.$emit('removeLikes');
+    },
+    deleteComment() {
+      this.$emit('deleteComment');
     }
   }
 };
