@@ -84,7 +84,8 @@ export default {
       commentToEdit: null,
       editContent: '',
       isActive: false,
-      isEditable: false
+      isEditable: false,
+      timestamp: Date.now()
     };
   },
   created() {
@@ -177,7 +178,7 @@ export default {
           },
           username: 'juliusomo'
         },
-        createdAt: '1 week ago',
+        createdAt: this.createTimeStamp(),
         score: 0,
         replies: []
       };
@@ -193,7 +194,7 @@ export default {
       const newReply = {
         id: Math.floor(Math.random() * 100000000000),
         content: this.replyText,
-        createdAt: '1 week ago',
+        createdAt: this.createTimeStamp(),
         score: 0,
         replyingTo: this.commentForReply.user.username,
         user: {
@@ -220,6 +221,12 @@ export default {
       } else {
         alert('Please enter something befor submitting');
       }
+    },
+    createTimeStamp() {
+      const day = new Date(this.timestamp);
+      const stringifiedDate = day.toString();
+      const formatedDate = stringifiedDate.slice(4, 24);
+      return formatedDate;
     }
   }
 };
