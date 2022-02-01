@@ -10,6 +10,7 @@
         @addLikes="increaseLikes(comment.id)"
         @removeLikes="decreaseLikes(comment.id)"
         @openModal="openModal(comment.id)"
+        @toggleReply="toggleReply"
         :currentUser="
           currentUser.username === comment.user.username ? true : false
         "
@@ -28,6 +29,7 @@
           :reply="comment.replies ? true : false"
           :class="{reply: 'reply'}"
           @openModal="openModal(reply.id)"
+          @toggleReply="toggleReply"
           :currentUser="
             currentUser.username === reply.user.username ? true : false
           "
@@ -38,6 +40,7 @@
       :avatar="currentUser.image.png"
       :username="currentUser.username"
       v-model="commentText"
+      :isReply="isReply"
       @submitForm="submitForm"
     />
     <Modal
@@ -63,11 +66,15 @@ export default {
       currentUser: data.currentUser,
       commentText: '',
       isOpen: false,
-      currentComment: null
+      currentComment: null,
+      selectedComment: null,
+      isReply: false
     };
   },
   created() {
-    this.comments = JSON.parse(localStorage.getItem('comments'));
+    if (localStorage.getItem('comments')) {
+      this.comments = JSON.parse(localStorage.getItem('comments'));
+    }
   },
   methods: {
     increaseLikes(id) {
@@ -118,6 +125,9 @@ export default {
       this.isOpen = true;
       this.currentComment = id;
     },
+    toggleForm() {
+      this.isReply = true;
+    },
     deleteComment(id) {
       this.comments = this.comments.filter((comment) => {
         return comment.id !== id;
@@ -145,6 +155,19 @@ export default {
         createdAt: '1 week ago',
         score: 0,
         replies: []
+      };
+      const newreply = {
+        id: Math.floor(Math.random() * 100000000000),
+        content: this.commentText,
+        createdAt: '1 week ago',
+        score: 0,
+        replyingTo: this.selectedComment.user.username,
+        user: {
+          image: {
+            png: 'https://i.imgur.com/WfguSm8.png'
+          },
+          username: 'juliusomo'
+        }
       };
       if (this.commentText) {
         this.comments.push(newComment);

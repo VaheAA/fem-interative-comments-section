@@ -1,5 +1,5 @@
 <template>
-  <div class="form-wrapper">
+  <div class="form-wrapper" :isReply="isReply">
     <div class="author" username="username">
       <img :src="avatar" alt="" class="avatar" />
     </div>
@@ -21,7 +21,8 @@ export default {
   props: {
     avatar: String,
     username: String,
-    modelValue: String
+    modelValue: String,
+    isReply: Boolean
   }
 };
 </script>

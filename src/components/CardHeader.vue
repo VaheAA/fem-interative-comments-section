@@ -11,7 +11,7 @@
         <img src="../assets/images/icon-delete.svg" alt="" />
         Delete
       </button>
-      <button class="reply-btn" v-if="!currentUser">
+      <button class="reply-btn" v-if="!currentUser" @click="toggleForm">
         <img src="../assets/images/icon-reply.svg" />
         Reply
       </button>
@@ -35,6 +35,9 @@ export default {
   methods: {
     openModal() {
       this.$emit('openModal');
+    },
+    toggleForm() {
+      this.$emit('toggleForm');
     }
   }
 };
