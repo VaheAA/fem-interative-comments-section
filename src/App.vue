@@ -19,8 +19,10 @@
         :isEditable="isEditable && commentToEdit.id === comment.id"
         v-model="editContent"
       />
-      <div class="replies" v-for="reply in comment.replies" :key="reply.id">
+      <div class="replies">
         <CommentCard
+          v-for="reply in comment.replies"
+          :key="reply.id"
           :likes="reply.score"
           :avatar="reply.user.image.png"
           :username="reply.user.username"
@@ -297,8 +299,11 @@ body {
     width: 2px;
     height: 100%;
     background: $lightGrayishBlue;
-    left: 0;
+    left: 45px;
     top: 0;
+    @media (max-width: 550px) {
+      left: 0;
+    }
   }
 }
 </style>
