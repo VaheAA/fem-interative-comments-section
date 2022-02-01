@@ -116,7 +116,24 @@ export default {
       });
     },
     submitForm() {
-      console.log(this.currentUser);
+      const newComment = {
+        id: Math.floor(Math.random() * 100000000000),
+        content: this.commentText,
+        user: {
+          image: {
+            png: 'https://i.imgur.com/WfguSm8.png'
+          },
+          username: 'juliusomo'
+        },
+        createdAt: '1 week ago',
+        score: 0,
+        replies: []
+      };
+      if (this.commentText) {
+        this.comments.push(newComment);
+      } else {
+        alert('Please enter something befor submitting');
+      }
     }
   }
 };
