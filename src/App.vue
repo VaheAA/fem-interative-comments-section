@@ -12,10 +12,11 @@
         @openModal="openModal(comment.id)"
         @toggleReply="toggleReply(comment)"
         @toggleEdit="toggleEdit(comment)"
+        @submitUpdate="submitUpdate"
         :currentUser="
           currentUser.username === comment.user.username ? true : false
         "
-        :isEditable="isEditable"
+        :isEditable="isEditable && commentToEdit.id === comment.id"
         v-model="editContent"
       />
       <div class="replies" v-for="reply in comment.replies" :key="reply.id">
@@ -34,6 +35,9 @@
           :currentUser="
             currentUser.username === reply.user.username ? true : false
           "
+          :isEditable="isEditable && commentToEdit.id === reply.id"
+          v-model="editContent"
+          @submitUpdate="submitUpdate"
         />
       </div>
       <AddReply
@@ -136,6 +140,7 @@ export default {
     openModal(id) {
       this.isOpen = true;
       this.commentToDelete = id;
+      document.body.style.overflow = 'hidden';
     },
     toggleReply(item) {
       this.isActive = true;
@@ -156,9 +161,11 @@ export default {
       });
       this.isOpen = false;
       this.commentToDelete = null;
+      document.body.style.overflow = 'scroll';
     },
     closeModal() {
       this.isOpen = false;
+      document.body.style.overflow = 'scroll';
     },
     submitForm() {
       const newComment = {
@@ -200,6 +207,15 @@ export default {
         this.commentForReply.replies.push(newReply);
         this.replyText = '';
         this.isActive = false;
+        return localStorage.setItem('comments', JSON.stringify(this.comments));
+      } else {
+        alert('Please enter something befor submitting');
+      }
+    },
+    submitUpdate() {
+      if (this.editContent) {
+        this.commentToEdit.content = this.editContent;
+        this.isEditable = false;
         return localStorage.setItem('comments', JSON.stringify(this.comments));
       } else {
         alert('Please enter something befor submitting');
@@ -274,7 +290,7 @@ body {
     width: 2px;
     height: 100%;
     background: $lightGrayishBlue;
-    left: 45px;
+    left: 0;
     top: 0;
   }
 }

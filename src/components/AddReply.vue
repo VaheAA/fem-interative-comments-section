@@ -40,6 +40,10 @@ export default {
   padding: 20px 28px;
   border-radius: 10px;
   margin-bottom: 20px;
+  @media (max-width: 550px) {
+    flex-direction: column-reverse;
+    padding: 10px 14px;
+  }
 
   .avatar {
     max-width: 30px;
@@ -48,6 +52,9 @@ export default {
   .add-form {
     width: 100%;
     display: flex;
+    @media (max-width: 550px) {
+      flex-direction: column;
+    }
   }
   .comment-text {
     width: 100%;
@@ -61,6 +68,9 @@ export default {
     color: $grayishBlue;
     &:focus {
       border: 1px solid rgba($color: $darkBlue, $alpha: 0.7);
+    }
+    @media (max-width: 550px) {
+      margin: 0;
     }
   }
   .add-button {
@@ -77,6 +87,10 @@ export default {
 
     &:hover {
       opacity: 0.5;
+    }
+    @media (max-width: 550px) {
+      margin-left: auto;
+      margin-top: 20px;
     }
   }
 }

@@ -50,9 +50,10 @@ export default {
   &-content {
     background: #fff;
     max-width: 400px;
-    width: 100%;
+    width: 90%;
     padding: 25px;
     border-radius: 10px;
+    margin: 0 auto;
   }
   &-title {
     color: $grayishBlue;

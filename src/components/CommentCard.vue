@@ -13,7 +13,13 @@
         @toggleReply="toggleReply"
         @toggleEdit="toggleEdit"
       />
-      <CardComment :text="text" :isEditable="isEditable" :value="modelValue" />
+      <CardComment
+        :text="text"
+        :isEditable="isEditable"
+        :modelValue="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+        @submit="$emit('submitUpdate', modelValue)"
+      />
     </div>
   </div>
 </template>
@@ -71,17 +77,29 @@ export default {
   border-radius: 10px;
   display: flex;
   align-items: flex-start;
+  position: relative;
+
+  @media (max-width: 550px) {
+    flex-direction: column-reverse;
+    padding: 10px 14px;
+  }
   &:not(:last-child) {
     margin-bottom: 20px;
   }
   &.reply {
     max-width: 600px;
     margin-left: auto;
+    @media (max-width: 550px) {
+      max-width: 95%;
+    }
   }
 
   &__content {
     width: 100%;
     margin-left: 20px;
+    @media (max-width: 550px) {
+      margin-left: 0;
+    }
   }
 }
 </style>

@@ -131,6 +131,11 @@ export default {
         opacity: 0.5;
       }
     }
+    @media (max-width: 550px) {
+      position: absolute;
+      bottom: 20px;
+      right: 10px;
+    }
   }
 }
 </style>

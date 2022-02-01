@@ -39,13 +39,16 @@ export default {
   &__text {
     color: $grayishBlue;
     font-size: 16px;
+
+    @media (max-width: 550px) {
+      font-size: 14px;
+    }
   }
   .update-wrapper {
     display: flex;
     align-items: flex-start;
     width: 100%;
     background: $white;
-    padding: 20px 28px;
     border-radius: 10px;
     margin-bottom: 20px;
 

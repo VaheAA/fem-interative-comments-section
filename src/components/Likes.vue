@@ -35,6 +35,14 @@ export default {
   border-radius: 10px;
   max-height: 100px;
 
+  @media (max-width: 550px) {
+    flex-direction: row;
+
+    max-width: 100px;
+    max-height: 40px;
+    margin-top: 15px;
+  }
+
   .like-btn {
     background: none;
     border: none;
@@ -45,10 +53,19 @@ export default {
     transition: all 0.2s ease;
     &:first-child {
       margin-bottom: 10px;
+      @media (max-width: 550px) {
+        margin-bottom: 0;
+        marig-right: 5px;
+      }
     }
     &:last-child {
       margin-top: 10px;
       margin-bottom: 10px;
+      @media (max-width: 550px) {
+        margin-bottom: 0;
+        margin-top: 0;
+        margin-left: 5px;
+      }
     }
     &:hover {
       color: $darkBlue;
