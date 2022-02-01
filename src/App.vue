@@ -11,9 +11,12 @@
         @removeLikes="decreaseLikes(comment.id)"
         @openModal="openModal(comment.id)"
         @toggleReply="toggleReply(comment)"
+        @toggleEdit="toggleEdit(comment)"
         :currentUser="
           currentUser.username === comment.user.username ? true : false
         "
+        :isEditable="isEditable"
+        v-model="editContent"
       />
       <div class="replies" v-for="reply in comment.replies" :key="reply.id">
         <CommentCard
@@ -27,6 +30,7 @@
           :reply="comment.replies ? true : false"
           :class="{reply: 'reply'}"
           @openModal="openModal(reply.id)"
+          @toggleEdit="toggleEdit(reply)"
           :currentUser="
             currentUser.username === reply.user.username ? true : false
           "
@@ -73,7 +77,10 @@ export default {
       isOpen: false,
       commentToDelete: null,
       commentForReply: null,
-      isActive: false
+      commentToEdit: null,
+      editContent: '',
+      isActive: false,
+      isEditable: false
     };
   },
   created() {
@@ -130,10 +137,14 @@ export default {
       this.isOpen = true;
       this.commentToDelete = id;
     },
-    toggleReply(id) {
+    toggleReply(item) {
       this.isActive = true;
-      this.commentForReply = id;
-      console.log(this.commentForReply);
+      this.commentForReply = item;
+    },
+    toggleEdit(item) {
+      this.isEditable = true;
+      this.commentToEdit = item;
+      this.editContent = this.commentToEdit.content;
     },
     deleteComment(id) {
       this.comments = this.comments.filter((comment) => {

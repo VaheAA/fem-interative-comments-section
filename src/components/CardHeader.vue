@@ -15,7 +15,7 @@
         <img src="../assets/images/icon-reply.svg" />
         Reply
       </button>
-      <button class="edit-btn" v-if="currentUser">
+      <button class="edit-btn" v-if="currentUser" @click="toggleEdit">
         <img src="../assets/images/icon-edit.svg" alt="" />
         Edit
       </button>
@@ -38,6 +38,9 @@ export default {
     },
     toggleReply() {
       this.$emit('toggleReply');
+    },
+    toggleEdit() {
+      this.$emit('toggleEdit');
     }
   }
 };

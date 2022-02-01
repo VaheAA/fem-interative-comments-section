@@ -11,8 +11,9 @@
         :currentUser="currentUser"
         @openModal="openModal"
         @toggleReply="toggleReply"
+        @toggleEdit="toggleEdit"
       />
-      <CardComment :text="text" />
+      <CardComment :text="text" :isEditable="isEditable" :value="modelValue" />
     </div>
   </div>
 </template>
@@ -32,7 +33,9 @@ export default {
     username: String,
     date: String,
     text: String,
-    currentUser: Boolean
+    currentUser: Boolean,
+    isEditable: Boolean,
+    modelValue: String
   },
   data() {
     return {
@@ -51,6 +54,9 @@ export default {
     },
     toggleReply() {
       this.$emit('toggleReply');
+    },
+    toggleEdit() {
+      this.$emit('toggleEdit');
     }
   }
 };
