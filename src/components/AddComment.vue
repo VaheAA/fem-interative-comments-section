@@ -53,8 +53,10 @@ export default {
     border-radius: 10px;
     border: 1px solid rgba($color: $darkBlue, $alpha: 0.2);
     resize: none;
+    font-family: inherit;
+    color: $grayishBlue;
     &:focus {
-      border: 1px solid $darkBlue;
+      border: 1px solid rgba($color: $darkBlue, $alpha: 0.7);
     }
   }
   .add-button {

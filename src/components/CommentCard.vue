@@ -9,7 +9,7 @@
         :username="username"
         :date="date"
         :currentUser="currentUser"
-        @deleteComment="deleteComment"
+        @openModal="openModal"
       />
       <CardComment :text="text" />
     </div>
@@ -45,8 +45,8 @@ export default {
     removeLikes() {
       this.$emit('removeLikes');
     },
-    deleteComment() {
-      this.$emit('deleteComment');
+    openModal() {
+      this.$emit('openModal');
     }
   }
 };

@@ -9,13 +9,15 @@
         :text="comment.content"
         @addLikes="increaseLikes(comment.id)"
         @removeLikes="decreaseLikes(comment.id)"
-        @deleteComment="deleteComment(comment.id)"
+        @openModal="openModal(comment.id)"
         :currentUser="
           currentUser.username === comment.user.username ? true : false
         "
       />
       <div class="replies">
         <CommentCard
+          v-for="reply in comment.replies"
+          :key="reply.id"
           :likes="reply.score"
           :avatar="reply.user.image.png"
           :username="reply.user.username"
@@ -23,11 +25,9 @@
           :text="reply.content"
           @addLikes="increaseLikes(reply.id)"
           @removeLikes="decreaseLikes(reply.id)"
-          @deleteComment="deleteComment(reply.id)"
           :reply="comment.replies ? true : false"
           :class="{reply: 'reply'}"
-          v-for="reply in comment.replies"
-          :key="reply.id"
+          @openModal="openModal(reply.id)"
           :currentUser="
             currentUser.username === reply.user.username ? true : false
           "
@@ -40,6 +40,11 @@
       v-model="commentText"
       @submitForm="submitForm"
     />
+    <Modal
+      :isOpen="isOpen"
+      @closeModal="closeModal"
+      @deleteComment="deleteComment(currentComment)"
+    />
   </div>
 </template>
 
@@ -47,15 +52,18 @@
 import CommentCard from './components/CommentCard.vue';
 import data from '../public/data.json';
 import AddComment from './components/AddComment.vue';
+import Modal from './components/Modal.vue';
 
 export default {
   name: 'App',
-  components: {CommentCard, AddComment},
+  components: {CommentCard, AddComment, Modal},
   data() {
     return {
       comments: data.comments,
       currentUser: data.currentUser,
-      commentText: ''
+      commentText: '',
+      isOpen: false,
+      currentComment: null
     };
   },
   created() {
@@ -106,14 +114,23 @@ export default {
         });
       });
     },
+    openModal(id) {
+      this.isOpen = true;
+      this.currentComment = id;
+    },
     deleteComment(id) {
-      this.comments.filter((comment) => {
-        comment.id !== id;
+      this.comments = this.comments.filter((comment) => {
+        return comment.id !== id;
       });
       this.comments.forEach((comment) => {
         comment.replies = comment.replies.filter((reply) => reply.id !== id);
         return localStorage.setItem('comments', JSON.stringify(this.comments));
       });
+      this.isOpen = false;
+      this.currentComment = null;
+    },
+    closeModal() {
+      this.isOpen = false;
     },
     submitForm() {
       const newComment = {
@@ -131,6 +148,8 @@ export default {
       };
       if (this.commentText) {
         this.comments.push(newComment);
+        this.commentText = '';
+        return localStorage.setItem('comments', JSON.stringify(this.comments));
       } else {
         alert('Please enter something befor submitting');
       }

@@ -7,13 +7,17 @@
       <span class="date">{{ date }}</span>
     </div>
     <div class="cta">
-      <button class="delete-btn" v-if="currentUser" @click="deleteComment">
+      <button class="delete-btn" v-if="currentUser" @click="openModal">
         <img src="../assets/images/icon-delete.svg" alt="" />
         Delete
       </button>
-      <button class="reply-btn">
+      <button class="reply-btn" v-if="!currentUser">
         <img src="../assets/images/icon-reply.svg" />
         Reply
+      </button>
+      <button class="edit-btn" v-if="currentUser">
+        <img src="../assets/images/icon-edit.svg" alt="" />
+        Edit
       </button>
     </div>
   </div>
@@ -29,8 +33,8 @@ export default {
     currentUser: Boolean
   },
   methods: {
-    deleteComment() {
-      this.$emit('deleteComment');
+    openModal() {
+      this.$emit('openModal');
     }
   }
 };
@@ -82,6 +86,21 @@ export default {
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+    .edit-btn {
+      background: transparent;
+      border: none;
+      color: $modBlue;
+      display: flex;
+      align-items: center;
+      gap: 5px;
       font-size: 14px;
       cursor: pointer;
       transition: all 0.2s ease;
