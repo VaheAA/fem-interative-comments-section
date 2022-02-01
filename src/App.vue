@@ -10,15 +10,13 @@
         @addLikes="increaseLikes(comment.id)"
         @removeLikes="decreaseLikes(comment.id)"
         @openModal="openModal(comment.id)"
-        @toggleReply="toggleReply"
+        @toggleReply="toggleReply(comment)"
         :currentUser="
           currentUser.username === comment.user.username ? true : false
         "
       />
-      <div class="replies">
+      <div class="replies" v-for="reply in comment.replies" :key="reply.id">
         <CommentCard
-          v-for="reply in comment.replies"
-          :key="reply.id"
           :likes="reply.score"
           :avatar="reply.user.image.png"
           :username="reply.user.username"
@@ -29,24 +27,29 @@
           :reply="comment.replies ? true : false"
           :class="{reply: 'reply'}"
           @openModal="openModal(reply.id)"
-          @toggleReply="toggleReply"
           :currentUser="
             currentUser.username === reply.user.username ? true : false
           "
         />
       </div>
+      <AddReply
+        v-if="isActive && commentForReply.id === comment.id"
+        :avatar="currentUser.image.png"
+        :username="currentUser.username"
+        v-model="replyText"
+        @submitReply="submitReply"
+      />
     </template>
     <AddComment
       :avatar="currentUser.image.png"
       :username="currentUser.username"
       v-model="commentText"
-      :isReply="isReply"
       @submitForm="submitForm"
     />
     <Modal
       :isOpen="isOpen"
       @closeModal="closeModal"
-      @deleteComment="deleteComment(currentComment)"
+      @deleteComment="deleteComment(commentToDelete)"
     />
   </div>
 </template>
@@ -56,19 +59,21 @@ import CommentCard from './components/CommentCard.vue';
 import data from '../public/data.json';
 import AddComment from './components/AddComment.vue';
 import Modal from './components/Modal.vue';
+import AddReply from './components/AddReply.vue';
 
 export default {
   name: 'App',
-  components: {CommentCard, AddComment, Modal},
+  components: {CommentCard, AddComment, Modal, AddReply},
   data() {
     return {
       comments: data.comments,
       currentUser: data.currentUser,
       commentText: '',
+      replyText: '',
       isOpen: false,
-      currentComment: null,
-      selectedComment: null,
-      isReply: false
+      commentToDelete: null,
+      commentForReply: null,
+      isActive: false
     };
   },
   created() {
@@ -123,10 +128,12 @@ export default {
     },
     openModal(id) {
       this.isOpen = true;
-      this.currentComment = id;
+      this.commentToDelete = id;
     },
-    toggleForm() {
-      this.isReply = true;
+    toggleReply(id) {
+      this.isActive = true;
+      this.commentForReply = id;
+      console.log(this.commentForReply);
     },
     deleteComment(id) {
       this.comments = this.comments.filter((comment) => {
@@ -137,7 +144,7 @@ export default {
         return localStorage.setItem('comments', JSON.stringify(this.comments));
       });
       this.isOpen = false;
-      this.currentComment = null;
+      this.commentToDelete = null;
     },
     closeModal() {
       this.isOpen = false;
@@ -156,12 +163,21 @@ export default {
         score: 0,
         replies: []
       };
-      const newreply = {
+      if (this.commentText) {
+        this.comments.push(newComment);
+        this.commentText = '';
+        return localStorage.setItem('comments', JSON.stringify(this.comments));
+      } else {
+        alert('Please enter something befor submitting');
+      }
+    },
+    submitReply() {
+      const newReply = {
         id: Math.floor(Math.random() * 100000000000),
-        content: this.commentText,
+        content: this.replyText,
         createdAt: '1 week ago',
         score: 0,
-        replyingTo: this.selectedComment.user.username,
+        replyingTo: this.commentForReply.user.username,
         user: {
           image: {
             png: 'https://i.imgur.com/WfguSm8.png'
@@ -169,9 +185,10 @@ export default {
           username: 'juliusomo'
         }
       };
-      if (this.commentText) {
-        this.comments.push(newComment);
-        this.commentText = '';
+      if (this.replyText) {
+        this.commentForReply.replies.push(newReply);
+        this.replyText = '';
+        this.isActive = false;
         return localStorage.setItem('comments', JSON.stringify(this.comments));
       } else {
         alert('Please enter something befor submitting');

@@ -1,16 +1,16 @@
 <template>
-  <div class="form-wrapper">
+  <div class="reply-wrapper" :isActive="isActive">
     <div class="author" username="username">
       <img :src="avatar" alt="" class="avatar" />
     </div>
-    <form class="add-form" @submit.prevent="$emit('submitForm', value)">
+    <form class="add-form" @submit.prevent="$emit('submitReply', value)">
       <textarea
         class="comment-text"
         placeholder="Add a comment..."
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
       ></textarea>
-      <button class="add-button">Send</button>
+      <button class="add-button">Reply</button>
     </form>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     avatar: String,
     username: String,
     modelValue: String,
-    isReply: Boolean
+    isActive: Boolean
   }
 };
 </script>
@@ -30,14 +30,16 @@ export default {
 <style lang="scss">
 @use '../assets/scss/style.scss' as *;
 
-.form-wrapper {
+.reply-wrapper {
   display: flex;
   align-items: flex-start;
   width: 100%;
+  max-width: 600px;
+  margin-left: auto;
   background: $white;
   padding: 20px 28px;
   border-radius: 10px;
-  margin-top: 20px;
+  margin-bottom: 20px;
 
   .avatar {
     max-width: 30px;

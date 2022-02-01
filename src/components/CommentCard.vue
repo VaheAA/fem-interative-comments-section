@@ -10,7 +10,7 @@
         :date="date"
         :currentUser="currentUser"
         @openModal="openModal"
-        @toggleForm="toggleForm"
+        @toggleReply="toggleReply"
       />
       <CardComment :text="text" />
     </div>
@@ -49,8 +49,8 @@ export default {
     openModal() {
       this.$emit('openModal');
     },
-    toggleForm() {
-      this.$emit('toggleForm');
+    toggleReply() {
+      this.$emit('toggleReply');
     }
   }
 };
